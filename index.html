@@ -1,118 +1,221 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>국립 제주 박물관 디지털 가이드북</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>화질별 이산화탄소 배출량 계산기</title>
   <style>
-    /* 전체 배경 이미지 설정 */
     body {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      background: url('제목을 입력해주세요..jpg') no-repeat center center fixed;
+      font-family: 'Noto Sans KR', sans-serif;
+      background: url('제목을 입력해주세요 (1).jpg') no-repeat center center fixed;
       background-size: cover;
-      font-family: "Pretendard", sans-serif;
-      color: white;
-      text-align: center;
       display: flex;
       flex-direction: column;
-      justify-content: center; /* 세로 중앙 */
-      align-items: center;     /* 가로 중앙 */
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      margin: 0;
+      padding-top: 50px;
     }
 
     h1 {
       font-size: 2.2rem;
-      font-weight: 700;
-      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
-      margin-bottom: 0.5rem;
+      color: #ffffff;
+      margin-bottom: 30px;
+      text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
     }
 
-    h2 {
-      font-size: 1.3rem;
-      font-weight: 400;
-      margin: 0.3rem 0;
-      text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.4);
+    h1 span {
+      font-size: 1.2rem;
+      color: #d9faff;
+      margin-left: 10px;
     }
 
-    button {
-      margin-top: 1.5rem;
+    .container {
       background: rgba(255, 255, 255, 0.8);
-      color: #004aad;
+      padding: 40px 50px;
+      border-radius: 25px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+      text-align: center;
+      transition: all 0.3s ease;
+      width: 90%;
+      max-width: 600px;
+      backdrop-filter: blur(8px);
+    }
+
+    .buttons button {
+      margin: 6px;
+      padding: 14px 25px;
       border: none;
-      border-radius: 8px;
-      padding: 12px 25px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #66b3cc, #99d6e0);
+      color: white;
       font-size: 1rem;
       cursor: pointer;
-      transition: 0.3s;
+      transition: all 0.3s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-    button:hover {
-      background: white;
+    .buttons button:hover {
+      transform: scale(1.08);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    input[type='number'] {
+      margin-top: 20px;
+      padding: 14px;
+      width: 240px;
+      border-radius: 15px;
+      border: 1px solid #66cccc;
+      font-size: 1rem;
+      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.05);
+      outline: none;
+      transition: all 0.3s;
+    }
+
+    input[type='number']:focus {
+      border-color: #3399cc;
+      box-shadow: 0 0 10px rgba(51, 153, 204, 0.3);
+    }
+
+    button#submitBtn {
+      margin-top: 25px;
+      padding: 16px 35px;
+      background: linear-gradient(135deg, #66cc99, #99e0cc);
+      color: white;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    button#submitBtn:hover {
       transform: scale(1.05);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
     }
 
-    /* 아래 소개 섹션 */
-    .info {
-      background: rgba(0, 0, 0, 0.5);
-      margin-top: 2rem;
+    #result {
+      margin-top: 30px;
+      font-size: 1.4rem;
+      color: #333;
+      font-weight: bold;
+      background-color: #e0f7fa;
+      padding: 16px 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .feeling-box {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      background: rgba(240, 248, 255, 0.9);
       padding: 20px;
-      border-radius: 12px;
-      max-width: 700px;
-      line-height: 1.6;
-      text-align: left;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
 
-    .info h3 {
-      color: #a5d8ff;
-      margin-bottom: 0.5rem;
-      font-size: 1.3rem;
+    .feeling-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #99d6e0, #66b3cc);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 20px;
+      font-size: 1rem;
+      font-weight: 500;
+      gap: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s;
     }
 
-    .info p {
-      margin-bottom: 1rem;
-    }
-
-    .info ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .info li::before {
-      content: "📍 ";
+    .feeling-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
     }
   </style>
 </head>
 <body>
-  <h1>첫번째 수학여행 코스</h1>
-  <h1>: 국립 제주 박물관</h1>
-  <h2>퀴즈를 풀고 1등부터 3등까지 상품을 받아가세요 🏆</h2>
-  <!-- ✅ 버튼 클릭 시 quiz.html로 실제 이동 -->
-  <button onclick="window.location.href='quiz.html'">점수 퀴즈 시작하기</button>
+  <h1>화질별 이산화탄소 배출량 계산기 <span>- 온새미로</span></h1>
 
-  <div class="info">
-    <h3>🏛 국립제주박물관 소개</h3>
-    <p>
-      국립제주박물관은?<br>
-       ✅ 제주도의 역사와 문화를 한눈에 볼 수 있는 대표 박물관으로, 2001년 6월 15일 처음으로 문을 연 고고역사박물관<br>
-       ✅'격조있고 사랑받는 박물관'이라는 미래 비전의 설정과 고객과 함께하는 열린 박물관의 실현 등을 정책목표로 삼고 있음 <br>
-       ✅ 다채로운 전시와 어린이박물관등의 운영을 통한 각종 체험교육을 지속적으로 운영중임<br>
-       ✅ 제주의 역사를 선사시대부터 고려시대, 조선시대등의 키워드로 나누어, <br> 시대별 생활양식이나 그당시 제주도의 자연환경, 역사적 사건등을 자세히 전시함<br>
-      
-    </p>
+  <div class="container">
+    <div class="buttons">
+      <button onclick="selectQuality(144)">144p</button>
+      <button onclick="selectQuality(240)">240p</button>
+      <button onclick="selectQuality(360)">360p</button>
+      <button onclick="selectQuality(480)">480p</button>
+      <button onclick="selectQuality(720)">720p</button>
+      <button onclick="selectQuality(1080)">1080p</button>
+    </div>
 
-    <h3>🌋 주변 가볼만한 곳</h3>
-    <ul>
-      <li><strong>삼양해변(삼양검은모래해변)</strong> — 박물관에서 차로 약 5분 거리, 독특한 검은 모래로 유명한 해변</li>
-      <li><strong>사라봉공원</strong> — 도심 속 산책 명소로, 정상에서 제주시 전경이 한눈에 보임</li>
-      <li><strong>용두암</strong> — 제주의 대표적인 해안 절경, 바위가 용 머리처럼 보여 이름이 붙음</li>
-      <li><strong>제주 민속자연사박물관</strong> — 제주의 자연생태와 민속문화를 함께 전시</li>
-    </ul>
+    <input type="number" id="hours" placeholder="시청 시간(시간 단위) 입력" min="1" step="1">
+    <br>
+    <button id="submitBtn" onclick="calculateCO2()">제출</button>
+
+    <div id="result"></div>
+    <div class="feeling-box" id="feeling"></div>
   </div>
+
+  <script>
+    let selectedQuality = null;
+
+    const co2Table = {
+      144: 36,
+      240: 668.8,
+      360: 1301.6,
+      480: 1934.4,
+      720: 2567,
+      1080: 3200
+    };
+
+    const co2ExamplesAll = [
+      '144p (36g): 💡 작은 전구 1시간 켜기',
+      '240p (668g): 🚗 자동차 1km 주행',
+      '360p (1301g): 📱 스마트폰 2주 충전',
+      '480p (1934g): 🚗 자동차 3km 주행',
+      '720p (2567g): 🍚 전기밥솥 10시간 / 🍜 라면 2개',
+      '1080p (3200g): 🚗 자동차 15km 주행'
+    ];
+
+    function selectQuality(q) {
+      selectedQuality = q;
+      document.querySelectorAll('.buttons button').forEach(btn => btn.style.background = 'linear-gradient(135deg, #66b3cc, #99d6e0)');
+      event.target.style.background = 'linear-gradient(135deg, #3399cc, #66cccc)';
+    }
+
+    function calculateCO2() {
+      const hours = parseInt(document.getElementById('hours').value);
+      const resultDiv = document.getElementById('result');
+      const feelingDiv = document.getElementById('feeling');
+
+      if (!selectedQuality) {
+        resultDiv.innerText = '⚠️ 화질을 먼저 선택해주세요!';
+        feelingDiv.innerHTML = '';
+        return;
+      }
+      if (isNaN(hours) || hours < 1) {
+        resultDiv.innerText = '⏱️ 시청 시간을 1시간 단위로 입력해주세요!';
+        feelingDiv.innerHTML = '';
+        return;
+      }
+
+      const co2PerHour = co2Table[selectedQuality];
+      const total = co2PerHour * hours;
+      resultDiv.innerText = `${selectedQuality}p 화질로 ${hours}시간 시청 시 약 ${total.toFixed(1)} g (${(total/1000).toFixed(3)} kg) CO₂가 배출됩니다.`;
+
+      feelingDiv.innerHTML = '';
+      co2ExamplesAll.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'feeling-item';
+        div.innerHTML = item;
+        feelingDiv.appendChild(div);
+      });
+    }
+  </script>
 </body>
 </html>
-
-
-  </footer>
-</body>
-</html
