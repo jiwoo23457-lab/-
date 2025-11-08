@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>박물관 퀴즈 게임</title>
+<style>
+  body {
+    font-family: "Pretendard", sans-serif;
+    text-align: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, #004aad, #0078ff);
+    color: white;
+  }
+  h1 { margin-bottom: 1rem; }
+  .question { margin: 2rem 0; display: none; }
+  button { margin-top: 1rem; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-size: 1rem; }
+  #timer { font-size: 1.5rem; margin-bottom: 1rem; }
+  #result { display: none; margin-top: 2rem; }
+  #resultAnswers { margin-top: 1rem; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto; }
+</style>
+</head>
+<body>
+
+<h1>⏱ 10초 박물관 퀴즈</h1>
+<p id="timer">남은 시간: 10초</p>
+
+<div id="quizContainer">
+  <div class="question" id="q1">
+    <p>1. 국립제주박물관이 처음 개관한 해는?</p>
+    <button onclick="answer(0, '2001년')">1999년</button>
+    <button onclick="answer(1, '2001년')">2001년</button>
+    <button onclick="answer(2, '2001년')">2005년</button>
+  </div>
+
+  <div class="question" id="q2">
+    <p>2. 국립제주박물관 주요 전시는?</p>
+    <button onclick="answer(0,'제주의 역사와 문화')">제주의 현대 산업과 기술</button>
+    <button onclick="answer(1,'제주의 역사와 문화')">제주의 역사와 문화</button>
+    <button onclick="answer(2,'제주의 역사와 문화')">세계 미술 작품</button>
+  </div>
+
+  <div class="question" id="q3">
+    <p>3. 박물관 근처 검은 모래 해변은?</p>
+    <button onclick="answer(0,'삼양해변')">삼양해변</button>
+    <button onclick="answer(1,'삼양해변')">협재해변</button>
+    <button onclick="answer(2,'삼양해변')">함덕해변</button>
+  </div>
+
+  <div class="question" id="q4">
+    <p>4. 박물관 로고 색상은?</p>
+    <button onclick="answer(0,'파란색 계열')">파란색 계열</button>
+    <button onclick="answer(1,'파란색 계열')">빨간색 계열</button>
+    <button onclick="answer(2,'파란색 계열')">초록색 계열</button>
+  </div>
+
+  <div class="question" id="q5">
+    <p>5. 체험형 공간은?</p>
+    <button onclick="answer(0,'어린이박물관')">어린이박물관</button>
+    <button onclick="answer(1,'어린이박물관')">전통음식관</button>
+    <button onclick="answer(2,'어린이박물관')">수공예체험실</button>
+  </div>
+
+  <div class="question" id="q6">
+    <p>6. 박물관의 미래비전은?</p>
+    <button onclick="answer(0,'격조있고 사랑받는 박물관')">격조있고 사랑받는 박물관</button>
+    <button onclick="answer(1,'격조있고 사랑받는 박물관')">제주도에서 가장 큰 박물관</button>
+    <button onclick="answer(2,'격조있고 사랑받는 박물관')">다양하고 가치있는 것들을 전시하는 박물관</button>
+  </div>
+
+  <div class="question" id="q7">
+    <p>7. 박물관에서 전시하지 않는 것은?</p>
+    <button onclick="answer(0,'제주도 근처 섬들의 역사')">제주도의 선시사대의 역사</button>
+    <button onclick="answer(1,'제주도 근처 섬들의 역사')">제주도와 관련한 역사적 사건</button>
+    <button onclick="answer(2,'제주도 근처 섬들의 역사')">제주도 근처 섬들의 역사</button>
+  </div>
+</div>
+
+<div id="result">
+  <h2>퀴즈 완료! 🎉</h2>
+  <p id="scoreText"></p>
+  <p>점수를 캡쳐해서 <a href="https://www.instagram.com/zuuu__10?igsh=MWE5dG8xZml2NXVidw==" target="_blank">@zuuu_10</a> DM으로 보내면 상위 3명에게 간식을 드립니다!</p>
+  <div id="resultAnswers"></div>
+</div>
+
+<script>
+let questions = ["q1","q2","q3","q4","q5","q6","q7"];
+let current = 0;
+let score = 0;
+let userAnswers = [];
+let correctAnswers = [
+  "2001년",
+  "제주의 역사와 문화",
+  "삼양해변",
+  "파란색 계열",
+  "어린이박물관",
+  "격조있고 사랑받는 박물관",
+  "제주도 근처 섬들의 역사"
+];
+let timerInterval;
+
+function showQuestion(index){
+  questions.forEach(id => document.getElementById(id).style.display="none");
+  if(index < questions.length){
+    document.getElementById(questions[index]).style.display="block";
+    let timeLeft = 10;
+    document.getElementById("timer").textContent = `남은 시간: ${timeLeft}초`;
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      document.getElementById("timer").textContent = `남은 시간: ${timeLeft}초`;
+      if(timeLeft <=0){
+        clearInterval(timerInterval);
+        nextQuestion(null);
+      }
+    },1000);
+  } else {
+    endQuiz();
+  }
+}
+
+function answer(btnIndex, correct){
+  clearInterval(timerInterval);
+  let selected = document.getElementById(questions[current]).querySelectorAll("button")[btnIndex].innerText;
+  userAnswers.push(selected);
+  if(selected === correct) score += 2; // 정답 맞으면 점수
+  nextQuestion();
+}
+
+function nextQuestion(){
+  current++;
+  showQuestion(current);
+}
+
+function endQuiz(){
+  document.getElementById("quizContainer").style.display="none";
+  document.getElementById("timer").style.display="none";
+  document.getElementById("scoreText").textContent = `점수: ${score}점`;
+  document.getElementById("result").style.display="block";
+
+  // 정답 확인
+  let resultHtml = "<h3>정답 확인</h3><ol>";
+  for(let i=0;i<correctAnswers.length;i++){
+    let user = userAnswers[i] || "응답 없음";
+    resultHtml += `<li>문제 ${i+1}: 내 답 - ${user}, 정답 - ${correctAnswers[i]}</li>`;
+  }
+  resultHtml += "</ol>";
+  document.getElementById("resultAnswers").innerHTML = resultHtml;
+}
+
+showQuestion(current);
+</script>
+
+</body>
+</html>
